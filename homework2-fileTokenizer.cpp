@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <stack>
+#include "lexer.h"
+#include "tokenizer.cpp"
 
 using namespcae std;
 
@@ -13,6 +15,7 @@ int main(int argc, char *argv[])
     bool vFlag = false;
     int fileCounter = 0;
     int index = -1;
+    Tokenizer::Tokenizer
     for(int i = 0; i < argc; i++)
     {
         if (argv[i][0] == '-')

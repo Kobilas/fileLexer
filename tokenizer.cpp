@@ -18,9 +18,9 @@ Tokenizer::Tokenizer()
 }
 Tokenizer::getToken(*istream br)
 {
-    regex idPattern("[a-Z]");
-    regex iConstPattern();
-    regex sConstPattern();
+    regex idPattern("[A-Za-Z][A-Za-z0-9]*");
+    regex iConstPattern("[0-9]*");
+    regex sConstPattern("[\"].*[\"]");
     string lexeme = "";
     while(!isspace(br.peek()))
     {
@@ -64,7 +64,29 @@ Tokenizer::getToken(*istream br)
         case ";":
             return TokenType::T_SC;
             break;
+        case null:
+            return TokenType::T_DONE;
+            break;
         default:
-
+            if(regex_match(lexeme, idPattern))
+            {
+                return TokenType::T_ID;
+                break;
+            }
+            else if(regex_match(lexeme, sConstPattern))
+            {
+                return TokenType::T_SCONST;
+                break;
+            }
+            else if(regex_match(lexeme, iConstPattern))
+            {
+                return TokenType::T_ICONST;
+                break;
+            }
+            else
+            {
+                return TokenType::T_ERROR;
+                break;
+            }
     }
 }
