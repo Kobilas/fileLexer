@@ -2,20 +2,20 @@
 #include <fstream>
 #include <string>
 #include <stack>
-#include "lexer.h"
 #include "tokenizer.cpp"
 
-using namespcae std;
+using namespace std;
 
 int main(int argc, char *argv[])
 {
     ifstream inFile;
+    istringstream inString;
     bool sFlag = false;
     bool iFlag = false;
     bool vFlag = false;
     int fileCounter = 0;
     int index = -1;
-    Tokenizer::Tokenizer
+    TokenType gotToken = null;
     for(int i = 0; i < argc; i++)
     {
         if (argv[i][0] == '-')
@@ -55,6 +55,18 @@ int main(int argc, char *argv[])
             cout << argv[index] << "FILE NOT FOUND"
             return 0;
         }
-        
+        do
+        {
+            gotToken = getToken(inFile);
+        } while (!(gotToken == T_DONE || gotToken == T_ERROR))
+    }
+    else
+    {
+        inString << cin;
+        tokeB = null;
+        do
+        {
+            gotToken = getToken(inString);
+        } while (!(gotToken == T_DONE || gotToken == T_ERROR))
     }
 }

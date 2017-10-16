@@ -7,16 +7,7 @@
 
 using namespace std;
 
-class Tokenizer
-{
-    public:
-        extern Token getToken(*istream br);
-        Tokenizer();
-};
-Tokenizer::Tokenizer()
-{
-}
-Tokenizer::getToken(*istream br)
+getToken(*istream br)
 {
     regex idPattern("[A-Za-Z][A-Za-z0-9]*");
     regex iConstPattern("[0-9]*");
