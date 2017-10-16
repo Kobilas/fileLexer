@@ -7,7 +7,7 @@
 
 using namespace std;
 
-getToken(*istream br)
+Token getToken(istream* br)
 {
     regex idPattern("[A-Za-Z][A-Za-z0-9]*");
     regex iConstPattern("[0-9]*");
