@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     bool vFlag = false;
     int fileCounter = 0;
     int index = -1;
-    TokenType gotToken = null;
-    for(int i = 0; i < argc; i++)
+    TokenType gotToken;
+    for (int i = 0; i < argc; i++)
     {
         if (argv[i][0] == '-')
         {
@@ -50,23 +50,24 @@ int main(int argc, char *argv[])
     if (fileCounter == 1)
     {
         inFile.open(index);
-        if(!inFile.is_open())
+        if (!inFile.is_open())
         {
-            cout << argv[index] << "FILE NOT FOUND"
+            cout << argv[index] << "FILE NOT FOUND";
             return 0;
         }
-        do
+        gotToken = getToken(inFile);
+        while (!(gotToken == T_DONE || gotToken == T_ERROR))
         {
             gotToken = getToken(inFile);
-        } while (!(gotToken == T_DONE || gotToken == T_ERROR))
+        }
     }
     else
     {
         inString << cin;
-        tokeB = null;
-        do
+        gotToken = getToken(inString);
+        while (!(gotToken == T_DONE || gotToken == T_ERROR))
         {
             gotToken = getToken(inString);
-        } while (!(gotToken == T_DONE || gotToken == T_ERROR))
+        }
     }
 }

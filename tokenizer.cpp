@@ -9,38 +9,44 @@ using namespace std;
 
 Token getToken(istream* br)
 {
-    map<string,TokenType> tknTypMap = {
-        {"int", T_INT},
-        {"string", T_STRING},
-        {"set", T_SET},
-        {"print", T_PRINT},
-        {"println", T_PRINTLN},
-        {"+", T_PLUS},
-        {"-", T_MINUS},
-        {"*", T_STAR},
-        {"/", T_SLASH},
-        {"(", T_LPAREN},
-        {")", T_RPAREN},
-        {";", T_SC}
+    map<string, TokenType> tknTypMap = {
+        { "int", T_INT },
+        { "string", T_STRING },
+        { "set", T_SET },
+        { "print", T_PRINT },
+        { "println", T_PRINTLN },
+        { "+", T_PLUS },
+        { "-", T_MINUS },
+        { "*", T_STAR },
+        { "/", T_SLASH },
+        { "(", T_LPAREN },
+        { ")", T_RPAREN },
+        { ";", T_SC }
     };
+    string first = "";
+    string comparison = "\"";
+    first += br->get();
+    br->putback(first[0]);
     string lexeme = "";
-    boolean numFlag = false;
-    boolean idFlag = false;
-    boolean stringFlag = false;
-    if(isdigit(br->peek()))
+    bool numFlag = false;
+    bool idFlag = false;
+    bool stringFlag = false;
+    if (isdigit(first))
         numFlag = true;
-    else if(isalpha(br->peek())))
+    else if (isalpha(first))
         idFlag = true;
-    else if((br->peek()).compare("\"") == 0)
+    else if (comparison.compare(first) == 0)
         stringFlag = true;
-    while(!isspace(br->peek()))
+    char c;
+    while (!isspace(br->peek()))
     {
-        if(numFlag && isdigit(br->peek()))
-            lexeme += br->get();
-        if(idFlag && isalnum(br->peek()))
-            lexeme += br->get();
-        if(stringFlag)
-            lexeme += br->get();
+        c = br->get();
+        if (numFlag && isdigit(c))
+            lexeme += c;
+        if (idFlag && isalnum(c))
+            lexeme += c;
+        if (stringFlag)
+            lexeme += c;
     }
     return Token(T_ERROR, "");
 }
