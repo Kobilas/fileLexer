@@ -2,82 +2,45 @@
 #include <fstream>
 #include <string>
 #include <cctype>
-#include <regex>
+#include <map>
 #include "lexer.h"
 
 using namespace std;
 
 Token getToken(istream* br)
 {
-    regex idPattern("[A-Za-Z][A-Za-z0-9]*");
-    regex iConstPattern("[0-9]*");
-    regex sConstPattern("[\"].*[\"]");
+    map<string,TokenType> tknTypMap = {
+        {"int", T_INT},
+        {"string", T_STRING},
+        {"set", T_SET},
+        {"print", T_PRINT},
+        {"println", T_PRINTLN},
+        {"+", T_PLUS},
+        {"-", T_MINUS},
+        {"*", T_STAR},
+        {"/", T_SLASH},
+        {"(", T_LPAREN},
+        {")", T_RPAREN},
+        {";", T_SC}
+    };
     string lexeme = "";
-    while(!isspace(br.peek()))
+    boolean numFlag = false;
+    boolean idFlag = false;
+    boolean stringFlag = false;
+    if(isdigit(br->peek()))
+        numFlag = true;
+    else if(isalpha(br->peek())))
+        idFlag = true;
+    else if((br->peek()).compare("\"") == 0)
+        stringFlag = true;
+    while(!isspace(br->peek()))
     {
-        lexeme += br.get();
+        if(numFlag && isdigit(br->peek()))
+            lexeme += br->get();
+        if(idFlag && isalnum(br->peek()))
+            lexeme += br->get();
+        if(stringFlag)
+            lexeme += br->get();
     }
-    switch(lexeme)
-    {
-        case "int":
-            return TokenType::T_INT;
-            break;
-        case "string":
-            return TokenType::T_STRING;
-            break;
-        case "set":
-            return TokenType::T_SET;
-            break;
-        case "print":
-            return TokenType::T_PRINT;
-            break;
-        case "println":
-            return TokenType::T_PRINTLN;
-            break;
-        case "+":
-            return TokenType::T_PLUS;
-            break;
-        case "-":
-            return TokenType::T_MINUS;
-            break;
-        case "*":
-            return TokenType::T_STAR;
-            break;
-        case "/":
-            return TokenType::T_SLASH;
-            break;
-        case "(":
-            return TokenType::T_LPAREN;
-            break;
-        case ")":
-            return TokenType::T_RPAREN;
-            break;
-        case ";":
-            return TokenType::T_SC;
-            break;
-        case null:
-            return TokenType::T_DONE;
-            break;
-        default:
-            if(regex_match(lexeme, idPattern))
-            {
-                return TokenType::T_ID;
-                break;
-            }
-            else if(regex_match(lexeme, sConstPattern))
-            {
-                return TokenType::T_SCONST;
-                break;
-            }
-            else if(regex_match(lexeme, iConstPattern))
-            {
-                return TokenType::T_ICONST;
-                break;
-            }
-            else
-            {
-                return TokenType::T_ERROR;
-                break;
-            }
-    }
+    return Token(T_ERROR, "");
 }
