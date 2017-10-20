@@ -52,8 +52,7 @@ class Token {
 
 public:
     Token(TokenType tt = T_ERROR, string lexeme = "") : tt(tt), lexeme(lexeme) {
-        extern int lineNumber;
-        lnum = lineNumber;
+        lnum = 0;
     }
 
     bool operator==(const TokenType tt) const { return this->tt == tt; }
