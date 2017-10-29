@@ -32,50 +32,47 @@ extern Token getToken(istream* br)
     int lineNumber = 1;
     while ((c = br->get()))
     {
-        if (c == '\n')
+        if(c == '\n')
         {
             lineNumber++;
-            if (stringFlag)
+            if(stringFlag)
             {
                 lexeme += c;
                 return Token(T_ERROR, lexeme);
             }
         }
-        if (firstFlag)
+        if(firstFlag)
         {
-            if (c == EOF)
-                if (br->eof())
-                    return Token(T_DONE, "");
-            if (isspace(c))
+            if(isspace(c))
                 continue;
-            switch (c) {
-            case '+':
-                return Token(T_PLUS, "");
-            case '-':
-                return Token(T_MINUS, "");
-            case '*':
-                return Token(T_STAR, "");
-            case '/':
-                return Token(T_SLASH, "");
-            case '(':
-                return Token(T_LPAREN, "");
-            case ')':
-                return Token(T_RPAREN, "");
-            case ';':
-                return Token(T_SC, "");
-            default:
-                break;
+            switch (c){
+                case '+':
+                    return Token(T_PLUS, "");
+                case '-':
+                    return Token(T_MINUS, "");
+                case '*':
+                    return Token(T_STAR, "");
+                case '/':
+                    return Token(T_SLASH, "");
+                case '(':
+                    return Token(T_LPAREN, "");
+                case ')':
+                    return Token(T_RPAREN, "");
+                case ';':
+                    return Token(T_SC, "");
+                default:
+                    break;
             }
-            if (c == '\"')
+            if(c == '\"')
             {
                 stringFlag = true;
                 lexeme += c;
                 firstFlag = false;
                 continue;
             }
-            if (isalpha(c))
+            if(isalpha(c))
                 idFlag = true;
-            if (isdigit(c))
+            if(isdigit(c))
                 numFlag = true;
             firstFlag = false;
         }
@@ -91,7 +88,7 @@ extern Token getToken(istream* br)
         else if (idFlag)
         {
             br->putback(c);
-            if (tknTypMap.count(lexeme) == 1)
+            if(tknTypMap.count(lexeme) == 1)
                 return Token(tknTypMap[lexeme], "");
             return Token(T_ID, lexeme);
         }
@@ -105,34 +102,41 @@ extern Token getToken(istream* br)
             lexeme += c;
             continue;
         }
-        if (!isalnum(c))
+        if(br->eof())
+            return Token(T_DONE, "");
+        if(c == '.')
         {
             lexeme += c;
             return Token(T_ERROR, lexeme);
         }
+        if(!isalnum(c))
+        {
+            lexeme += c;
+            return Token(T_DONE, "");
+        }
     }
     return Token(T_DONE, "");
 }
-extern ostream& operator<<(ostream& out, const Token& tok) {
+extern ostream& operator<<(ostream& out, const Token& tok){
     map<TokenType, string> tknTypMap = {
-        { T_INT, "T_INT" },
-        { T_STRING, "T_STRING" },
-        { T_SET, "T_SET" },
-        { T_PRINT, "T_PRINT" },
-        { T_PRINTLN, "T_PRINTLN" },
-        { T_PLUS, "T_PLUS" },
-        { T_MINUS, "T_MINUS" },
-        { T_STAR, "T_STAR" },
-        { T_SLASH, "T_SLASH" },
-        { T_LPAREN, "T_LPAREN" },
-        { T_RPAREN, "T_RPAREN" },
-        { T_SC, "T_SC" },
-        { T_ERROR, "T_ERROR" },
-        { T_ID, "T_ID" },
-        { T_SCONST, "T_SCONST" },
-        { T_ICONST, "T_ICONST" }
+        { T_INT, "T_INT"},
+        { T_STRING, "T_STRING"},
+        { T_SET, "T_SET"},
+        { T_PRINT, "T_PRINT"},
+        { T_PRINTLN, "T_PRINTLN"},
+        { T_PLUS, "T_PLUS"},
+        { T_MINUS, "T_MINUS"},
+        { T_STAR, "T_STAR"},
+        { T_SLASH, "T_SLASH"},
+        { T_LPAREN, "T_LPAREN"},
+        { T_RPAREN, "T_RPAREN"},
+        { T_SC, "T_SC"},
+        { T_ERROR, "T_ERROR"},
+        { T_ID, "T_ID"},
+        { T_SCONST, "T_SCONST"},
+        { T_ICONST, "T_ICONST"}
     };
-    if (tok.GetTokenType() == T_ID || tok.GetTokenType() == T_SCONST || tok.GetTokenType() == T_ICONST || tok.GetTokenType() == T_ERROR)
+    if(tok.GetTokenType() == T_ID || tok.GetTokenType() == T_SCONST || tok.GetTokenType() == T_ICONST || tok.GetTokenType() == T_ERROR)
     {
         out << tknTypMap[tok.GetTokenType()] << "(" << tok.GetLexeme() << ")";
         return out;
