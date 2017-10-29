@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "lexer.h"
 
 using namespace std;
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
     bool iFlag = false;
     bool vFlag = false;
     bool slashFlag = false;
+    bool firstLoop = true;
     int fileCounter = 0;
     int index = -1;
     int numToken = 0;
@@ -69,88 +71,127 @@ int main(int argc, char *argv[])
         gotToken = getToken(&inFile);
         while (!(gotToken.GetTokenType() == T_DONE || gotToken.GetTokenType() == T_ERROR))
         {
-            if (gotToken.GetTokenType() == T_SLASH)
+            if(gotToken.GetTokenType() == T_SLASH)
             {
-                if (slashFlag == true)
+                if(slashFlag == true)
                 {
                     inFile.ignore(256, '\n');
                     slashFlag = false;
                 }
                 slashFlag = true;
             }
-            else
+            if(slashFlag && gotToken.GetTokenType() != T_SLASH)
             {
-                if (vFlag)
-                    cout << "T_SLASH";
                 slashFlag = false;
+                if(vFlag)
+                    cout << "T_SLASH" << endl;
+                numToken++;
             }
-            if (vFlag && gotToken.GetTokenType() != T_SLASH)
-                cout << gotToken;
-            if (gotToken.GetTokenType() == T_ID)
+            if(gotToken.GetTokenType() != T_SLASH)
+                numToken++;
+            if(vFlag && gotToken.GetTokenType() != T_SLASH)
+                cout << gotToken << endl;
+            if(gotToken.GetTokenType() == T_ID)
                 numId++;
-            if (gotToken.GetTokenType() == T_SCONST)
+            if(gotToken.GetTokenType() == T_SCONST)
                 numString++;
-            if (sFlag)
+            if(sFlag && gotToken.GetTokenType() == T_SCONST)
                 strings.push_back(gotToken.GetLexeme());
-            if (iFlag)
+            if(iFlag && gotToken.GetTokenType() == T_ID)
                 identifiers.push_back(gotToken.GetLexeme());
             gotToken = getToken(&inFile);
         }
     }
     else
     {
-        cin >> input;
-        inString << input;
+        while(getline(cin, input))
+        {
+            inString << " " << input;
+        }
         gotToken = getToken(&inString);
         while (!(gotToken.GetTokenType() == T_DONE || gotToken.GetTokenType() == T_ERROR))
         {
-            if (gotToken.GetTokenType() == T_SLASH)
+            if(gotToken.GetTokenType() == T_SLASH)
             {
-                if (slashFlag == true)
+                if(slashFlag == true)
                 {
-                    inFile.ignore(256, '\n');
+                    inString.ignore(256, '\n');
                     slashFlag = false;
                 }
                 slashFlag = true;
             }
-            else
+            if(slashFlag && gotToken.GetTokenType() != T_SLASH)
             {
-                if (vFlag)
-                    cout << "T_SLASH";
                 slashFlag = false;
+                if(vFlag)
+                    cout << "T_SLASH" << endl;
+                numToken++;
             }
-            if (vFlag && gotToken.GetTokenType() != T_SLASH)
-                cout << gotToken;
-            if (gotToken.GetTokenType() == T_ID)
+            if(gotToken.GetTokenType() != T_SLASH)
+                numToken++;
+            if(vFlag && gotToken.GetTokenType() != T_SLASH)
+                cout << gotToken << endl;
+            if(gotToken.GetTokenType() == T_ID)
                 numId++;
-            if (gotToken.GetTokenType() == T_SCONST)
+            if(gotToken.GetTokenType() == T_SCONST)
                 numString++;
-            if (sFlag)
+            if(sFlag && gotToken.GetTokenType() == T_SCONST)
                 strings.push_back(gotToken.GetLexeme());
-            if (iFlag)
+            if(iFlag && gotToken.GetTokenType() == T_ID)
                 identifiers.push_back(gotToken.GetLexeme());
             gotToken = getToken(&inString);
         }
     }
-    if (gotToken.GetTokenType() == T_ERROR)
+    if(gotToken.GetTokenType() == T_ERROR)
     {
         cout << "Lexical error " << gotToken << endl;
         return 0;
     }
     lineNumber = gotToken.GetLinenum();
-    if (lineNumber < 1)
+    if(lineNumber < 1)
         lineNumber++;
     cout << "Token count: " << numToken << endl;
     cout << "Identifier count: " << numId << endl;
     cout << "String count: " << numString << endl;
-    if (sFlag)
+    if(sFlag)
     {
-        cout << "Strings: ";
-
+        sort(strings.begin(), strings.end());
+        firstLoop = true;
+        for(vector<string>::iterator sit = strings.begin(); sit != strings.end(); ++sit)
+        {
+            if(firstLoop)
+            {
+                cout << *sit;
+                firstLoop = false;
+            }
+            else
+            {
+                cout << ", ";
+                cout << *sit;
+            }
+        }
+        if(!strings.empty())
+            cout << endl;
     }
-    if (iFlag)
+    if(iFlag)
     {
-        cout << "Identifiers: ";
+        sort(identifiers.begin(), identifiers.end());
+        firstLoop = true;
+        for(vector<string>::iterator iit = identifiers.begin(); iit != identifiers.end(); ++iit)
+        {
+            if(firstLoop)
+            {
+                cout << *iit;
+                firstLoop = false;
+            }
+            else
+            {
+                cout << ", ";
+                cout << *iit;
+            }
+        }
+        if(!identifiers.empty())
+            cout << endl;
     }
     return 0;
 }
