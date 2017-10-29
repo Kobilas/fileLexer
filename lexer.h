@@ -1,9 +1,9 @@
 /*
-* lexer.h
-*
-* CS280
-* Fall 2017
-*/
+ * lexer.h
+ *
+ * CS280
+ * Fall 2017
+ */
 
 #ifndef LEXER_H_
 #define LEXER_H_
@@ -15,51 +15,51 @@ using std::istream;
 using std::ostream;
 
 enum TokenType {
-    // keywords
-    T_INT,
-    T_STRING,
-    T_SET,
-    T_PRINT,
-    T_PRINTLN,
+		// keywords
+	T_INT,
+	T_STRING,
+	T_SET,
+	T_PRINT,
+	T_PRINTLN,
 
-    // an identifier
-    T_ID,
+		// an identifier
+	T_ID,
 
-    // an integer and string constant
-    T_ICONST,
-    T_SCONST,
+		// an integer and string constant
+	T_ICONST,
+	T_SCONST,
 
-    // the operators, parens and semicolon
-    T_PLUS,
-    T_MINUS,
-    T_STAR,
-    T_SLASH,
-    T_LPAREN,
-    T_RPAREN,
-    T_SC,
+		// the operators, parens and semicolon
+	T_PLUS,
+	T_MINUS,
+	T_STAR,
+	T_SLASH,
+	T_LPAREN,
+	T_RPAREN,
+	T_SC,
 
-    // any error returns this token
-    T_ERROR,
+		// any error returns this token
+	T_ERROR,
 
-    // when completed (EOF), return this token
-    T_DONE
+		// when completed (EOF), return this token
+	T_DONE
 };
 
 class Token {
-    TokenType	tt;
-    string		lexeme;
-    int			lnum;
+	TokenType	tt;
+	string		lexeme;
+	int			lnum;
 
 public:
-    Token(TokenType tt = T_ERROR, string lexeme = "") : tt(tt), lexeme(lexeme) {
-        lnum = 0;
-    }
+	Token(TokenType tt = T_ERROR, string lexeme = "") : tt(tt), lexeme(lexeme) {
+    lnum = 0;
+	}
 
-    bool operator==(const TokenType tt) const { return this->tt == tt; }
-    bool operator!=(const TokenType tt) const { return this->tt != tt; }
+	bool operator==(const TokenType tt) const { return this->tt == tt; }
+	bool operator!=(const TokenType tt) const { return this->tt != tt; }
 
-    TokenType	GetTokenType() const { return tt; }
-    string		GetLexeme() const { return lexeme; }
+	TokenType	GetTokenType() const { return tt; }
+	string		GetLexeme() const { return lexeme; }
     int         GetLinenum() const { return lnum; }
 };
 
